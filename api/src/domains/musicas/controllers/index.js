@@ -1,61 +1,91 @@
-const {  application  } = require('express');
 const express = require('express');
-const app = require('../../../../config/expressConfig');
-const songList = require('../models/musics');
 const router = express.Router();
+const Music = require('../models/Music');
+const MusicService = require('../service/MusicService');
 
-const music = require('../models/musics');
+// ********************************** MUSICA ******************************************************
+router.post('/user',async(req,res) =>{
+    const body = req.body;
+    try{
+        await MusicService.creation(body);
+        return res.status(201);
+    }catch{
+        return res.status(400);
+    }
+});
 
-// router.get('/songs', function(req,res){
-//     res.status(200).send(music);
+router.get('/music', async(req,res) =>{
+    const music = await Music.findAll({raw:true})
+    console.log(music);
+    res.status(200).send(music);
+})
+
+
+
+router.put ('/music/:id',async(req,res)=>{
+    var id = req.params.id;
+    const findMusic = await Music.findOne({raw: true, where:{id: id}})
+
+    const title = req.body.title;
+    const artistID = req.body.artistID;
+    const photo = req.body.photo;
+    const category = req.body.category;
+
+    const musicData = {
+        title,
+        artistID,
+        photo,
+        category,
+    }
+
+    await Music.update(musicData, { where: {id: id}})
+
+    res.status(200).send(findMusic);
+});
+
+router.delete('/music/:id',async(req,res)=>{
+    var id = req.params.id;
+
+    const findMusic = await Music.findOne({raw: true, where:{id: id}})    
+    Music.destroy({where:{id:id}})
+
+    res.status(200).send(findMusic);
+})
+
+// router.get('/', (req,res) =>{
+//     res.status(200).send(Musica);
+// })
+
+// router.post('/',(req,res) =>{
+//     console.log(req.body);
+//     Musica.push(req.body);
+
+//     res.status(200).send(req.body);
 // });
 
-router.get('/songs', function(req,res){
-    res.json(music);
-});
+// router.put('/:nome',(req,res)=>{
+//     var nome = req.params.nome;
+//     //const findMusic = Musica.find(Musica=>Musica.nome === nome);
+//     const findMusic = Musica.findIndex(Musica=>Musica.nome === nome);
 
-router.get('/songs/:name', function(req,res){
-    const {name} = req.params;
-    const song = music.find(song => song.nome == name);
+//     console.log(findMusic);
+//     Musica[findMusic].nome = req.body.nome;
+//     Musica[findMusic].artista = req.body.artista;
+//     Musica[findMusic].genero = req.body.genero;
+//     Musica[findMusic].quantidadeDownloads = req.body.quantidadeDownloads;
 
-    if(!song) return res.status(204).json();
+//     res.status(200).send(Musica[findMusic]);
+// });
 
-    res.json(song);
-});
+// router.delete('/:nome',(req,res)=>{
+//     var nomeDel = req.params.nome;
 
-router.post('/',function(req,res){
-    const {nome,artista,genero,quantidadeDownloads} = req.body;
+//     const findMusicDel = Musica.findIndex(Musica => Musica.nome === nomeDel);
+    
+//     Musica.splice(findMusicDel,1);
 
-    res.status(200).json({nome, artista, genero, quantidadeDownloads});
-
-    //dar append no json com as informaçoes recebidas
-    songList.append({nome: nome, artista: artista, genero: genero, quantidadeDownloads: quantidadeDownloads});
-});
-
-router.put('/songs/:name', function(req,res){
-    const {name} = req.params;
-    const song = music.find(song => song.nome == name);
-
-    if(!song) return res.status(204).json();
-
-    const {nome,artista,genero,quantidadeDownloads} = req.body;
-
-    song.nome = nome;
-    song.artista = artista;
-    song.genero = genero;
-    song.quantidadeDownloads = quantidadeDownloads;
-
-    music.push(song);
-    res.json(song);
-
-});
-
-router.delete('/songs/:name', function(req,res){
-    const {name} = req.params
-    const songsFiltred = music.filter(song => song.nome != name);
-
-    res.json(songsFiltred);
-})
+//     res.status(200).send(Musica);
+// })
 
 
 module.exports = router;

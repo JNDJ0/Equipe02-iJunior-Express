@@ -2,12 +2,17 @@ const express = require('express');
 require('dotenv').config();
 
 const app = express();
+app.use(express.json());
 app.use(express.urlencoded({
     extended: true,
 }));
-app.use(express.json());
 
 const userRouter = require('../src/domains/usuarios/controllers/index');
-app.use("/api/music", userRouter);
+const musicRouter = require('../src/domains/musicas/controllers/index');
+const artistRouter = require('../src/domains/artistas/controllers/index');
+
+app.use("/api/user", userRouter);
+app.use("/api/music", musicRouter);
+app.use("/api/artist", artistRouter);
 
 module.exports = app;

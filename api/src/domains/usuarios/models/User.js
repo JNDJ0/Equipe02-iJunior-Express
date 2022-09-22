@@ -1,5 +1,7 @@
 const sequelize = require('../../../../database/index');
 const {DataTypes} = require('sequelize');
+const Music = require('../../musicas/models/Music');
+const UserMusic = require('./UserMusic');
 
 const User = sequelize.define('User',{
     id:{
@@ -30,7 +32,23 @@ const User = sequelize.define('User',{
     },
 });
 
-User.sync({alter: true, force: false})
+User.belongsToMany(Music,{
+    through: {
+        model: UserMusic
+    },
+    foreignKey: 'idUser',
+    constrait: true
+})
+
+Music.belongsToMany(User,{
+    through: {
+        model: UserMusic
+    },
+    foreignKey: 'idMusic',
+    constrait: true
+});
+
+User.sync({alter: false, force: false})
     .then(() => {
         console.log('Tabela de Usuarios foi (re)criada');
     })

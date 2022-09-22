@@ -1,8 +1,8 @@
 const sequelize = require('../../../../database/index');
 const {DataTypes} = require('sequelize');
-const Artist = require('../../artistas/models/Artist');
+// const Music = require('../../musicas/models/Music');
 
-const Music = sequelize.define('Music',{
+const Artist = sequelize.define('Artist',{
     id:{
         type: DataTypes.INTEGER,
         primaryKey:true,
@@ -10,29 +10,26 @@ const Music = sequelize.define('Music',{
         allowNull: false,
     },
 
+    name:{
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+
+    nacionality :{
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+
     photo: {
         type: DataTypes.STRING,
         allowNULL: false,
     },
-
-    title:{
-        type: DataTypes.STRING,
-        allowNull: false,
-    },
-    
-    category: {
-        type: DataTypes.INTEGER,
-        allowNULL: false,
-    },
 });
 
-Music.belongsTo(Artist);
-Artist.hasMany(Music);
-
-Music.sync({alter: false, force: false})
+Artist.sync({alter: false, force: false})
     .then(() => {
-        console.log('Tabela de Musicas foi (re)criada');
+        console.log('Tabela de Artistas foi (re)criada');
     })
     .catch((error) => console.log(error));
 
-module.exports = Music;
+module.exports = Artist;
