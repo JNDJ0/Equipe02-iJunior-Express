@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
 const UserService = require('../service/UserService');
-
+const statusCodes = require('../../../../constants/statusCodes');
 /*router.post('/', async(req,res) => {
     const body = req.body;
     try{
@@ -18,16 +18,20 @@ router.post('/user',async(req,res) =>{
     const body = req.body;
     try{
         await UserService.creation(body)
-        return res.status(201);
+        return res.status(statusCodes.SUCCESS);
     }catch{
-        return res.status(400);
+        return res.status(statusCodes.NOT_FOUND);
     }
 });
 
 router.get('/user', async(req,res) =>{
-    const users = await User.findAll({raw:true})
-    console.log(users)
-    res.status(200).send(users);
+    try{
+        const users = await UserService.getAll()
+        console.log(users);
+        return res.status(statusCodes.SUCCESS);
+    }catch{
+        return res.status(statusCodes.NOT_FOUND);
+    }
 });
 
 router.put ('/user/:id',async(req,res)=>{
@@ -48,7 +52,7 @@ router.put ('/user/:id',async(req,res)=>{
 
     await User.update(userData, { where: {id: id}})
 
-    res.status(200).send(findUser);
+    res.status(statusCodes.SUCCESS).send(findUser);
 });
 
 router.delete('/user/:id',async(req,res)=>{
@@ -57,7 +61,7 @@ router.delete('/user/:id',async(req,res)=>{
     const findUser = await User.findOne({raw: true, where:{id: id}})    
     User.destroy({where:{id:id}})
 
-    res.status(200).send(findUser);
+    res.status(statusCodes.SUCCESS).send(findUser);
 });
 
 module.exports = router;

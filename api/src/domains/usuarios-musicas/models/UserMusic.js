@@ -1,7 +1,7 @@
 const sequelize = require('../../../../database/index');
 const {DataTypes, Sequelize} = require('sequelize');
 const Music = require('../../musicas/models/Music');
-const User = require('./User');
+const User = require('../../usuarios/models/User');
 
 
 const UserMusic = sequelize.define('UserMusic',{});
