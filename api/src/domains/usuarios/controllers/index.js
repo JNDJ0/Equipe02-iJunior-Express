@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
-const UserService = require('../service/UserService');
+const UserService = require('../service/UserService'); //obs: no github, a pasta service está com a letra maiuscula por algum motivo :X
 const statusCodes = require('../../../../constants/statusCodes');
 /*router.post('/', async(req,res) => {
     const body = req.body;
@@ -35,33 +35,22 @@ router.get('/user', async(req,res) =>{
 });
 
 router.put ('/user/:id',async(req,res)=>{
-    var id = req.params.id;
-    const findUser = await User.findOne({raw: true, where:{id: id}})
-
-    const name = req.body.name;
-    const email = req.body.email
-    const password = req.body.password
-    const role = req.body.role
-
-    const userData = {
-        name,
-        email,
-        password,
-        role,
-    }
-
-    await User.update(userData, { where: {id: id}})
-
-    res.status(statusCodes.SUCCESS).send(findUser);
+   try{
+        const newUser = await UserService.newUser(req.params.id, req.body);
+        return res.status(statusCodes.SUCCESS);
+   }catch{
+        return res.status(statusCodes.NOT_FOUND);
+   }
 });
 
 router.delete('/user/:id',async(req,res)=>{
-    var id = req.params.id;
-
-    const findUser = await User.findOne({raw: true, where:{id: id}})    
-    User.destroy({where:{id:id}})
-
-    res.status(statusCodes.SUCCESS).send(findUser);
+    try{
+        const user = await UserService.deleteUser(req.params.id);
+    
+        res.status(statusCodes.SUCCESS);send(user);
+    } catch{
+        res.status(statusCodes.INTERNAL_SERVER_ERROR);
+    }
 });
 
 module.exports = router;

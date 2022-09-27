@@ -15,6 +15,31 @@ class UserService{
 
         return users;
     }
+    async newUser(id, body){
+        const findUser = await User.findByPk(id);
+
+        const name = body.name;
+        const email = body.email;
+        const password = body.password;
+        const role = body.role;
+
+        const userData = {
+            name,
+            email,
+            password,
+            role
+        };
+
+        if (!userData){
+            throw new QueryError('No user was added.');
+        } else{
+            await User.update(userData, {where: {id: id}});
+        }
+    }
+    async deleteUser(id){
+        const user = await User.findByPk(req.params.id);
+        await user.destroy();
+    }
 }
 
 
