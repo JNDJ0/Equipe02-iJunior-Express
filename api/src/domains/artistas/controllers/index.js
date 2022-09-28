@@ -31,9 +31,9 @@ router.put('/:id', async (req, res, next) => {
         var id = req.params.id;
         const findArtist = await ArtistService.findArtist(id);
 
-        const name = req.body.nome
-        const nacionality = req.body.nacionality
-        const phone = req.body.phone
+        const name = req.body.name;
+        const nacionality = req.body.nacionality;
+        const phone = req.body.phone;
 
         const artistData = {
             name,
