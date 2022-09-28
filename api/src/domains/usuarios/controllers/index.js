@@ -3,53 +3,43 @@ const router = express.Router();
 const User = require('../models/User');
 const UserService = require('../service/UserService'); //obs: no github, a pasta service está com a letra maiuscula por algum motivo :X
 const statusCodes = require('../../../../constants/statusCodes');
-/*router.post('/', async(req,res) => {
-    const body = req.body;
-    try{
-        await userService.creation(body)
-        return res.status(201);
-    }catch{
-        return res.status(400)
-    }
-});
-*/
-// ********************************** USUARIOS ******************************************************
-router.post('/user',async(req,res) =>{
-    const body = req.body;
-    try{
-        await UserService.creation(body)
-        return res.status(statusCodes.SUCCESS);
-    }catch{
-        return res.status(statusCodes.NOT_FOUND);
-    }
-});
 
-router.get('/user', async(req,res) =>{
+// ********************************** USUARIOS ******************************************************
+router.get('/', async(req,res) =>{
     try{
         const users = await UserService.getAll()
-        console.log(users);
-        return res.status(statusCodes.SUCCESS);
+        return res.status(statusCodes.SUCCESS).send(users);
     }catch{
         return res.status(statusCodes.NOT_FOUND);
     }
 });
 
-router.put ('/user/:id',async(req,res)=>{
+router.post('/',async(req,res) =>{
+    try{
+        const body = req.body;
+        await UserService.creation(body);
+        return res.status(statusCodes.SUCCESS).send("Usuario criado com sucesso!");
+    }catch(error){
+        return res.status(statusCodes.NOT_FOUND).send(error);
+    }
+});
+
+
+router.put ('/:id',async(req,res)=>{
    try{
-        const newUser = await UserService.newUser(req.params.id, req.body);
-        return res.status(statusCodes.SUCCESS);
+        await UserService.newUser(req.params.id, req.body);
+        return res.status(statusCodes.SUCCESS).send("Usuário alterado com sucesso");
    }catch{
         return res.status(statusCodes.NOT_FOUND);
    }
 });
 
-router.delete('/user/:id',async(req,res)=>{
+router.delete('/:id',async(req,res)=>{
     try{
-        const user = await UserService.deleteUser(req.params.id);
-    
-        res.status(statusCodes.SUCCESS);send(user);
-    } catch{
-        res.status(statusCodes.INTERNAL_SERVER_ERROR);
+        await UserService.deleteUser(req.params.id);
+        res.status(statusCodes.SUCCESS).send("Usuário deletado com sucesso!");
+    } catch(error){
+        res.status(statusCodes.INTERNAL_SERVER_ERROR).send(error);
     }
 });
 

@@ -28,7 +28,6 @@ const User = sequelize.define('User',{
 
     role: {
         type: DataTypes.STRING,
-        validate: {content: 'admin', content: 'user'}
     },
 });
 

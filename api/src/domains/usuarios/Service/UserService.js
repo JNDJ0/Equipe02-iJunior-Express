@@ -1,11 +1,12 @@
 const { QueryError } = require('sequelize');
 const User = require('../models/User');
-const router = require('express').Router();
 
 class UserService{
+
     async creation(body){
         await User.create(body);
     }
+
     async getAll(){
         const users = await User.findAll();
 
@@ -37,8 +38,8 @@ class UserService{
         }
     }
     async deleteUser(id){
-        const user = await User.findByPk(req.params.id);
-        await user.destroy();
+        const user = await User.findByPk(id);
+        return await user.destroy();
     }
 }
 
