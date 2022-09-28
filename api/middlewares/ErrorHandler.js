@@ -1,4 +1,4 @@
-const {JsonWebTokenError} = require('jsonwebtoken');
+//const {JsonWebTokenError} = require('jsonwebtoken');
 const NotAuthorizedError = require('../errors/NotAuthorizedError.js');
 const InvalidParamError = require('../errors/InvalidParamError.js');
 const TokenError = require('../errors/TokenError.js');

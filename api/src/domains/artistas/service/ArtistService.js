@@ -1,5 +1,6 @@
 const Artist = require('../models/Artist');
 const router = require('express').Router();
+const QueryError = require('../../../../errors/QueryError');
 
 class ArtistService{
     async creation(body){
@@ -7,7 +8,11 @@ class ArtistService{
     }
 
     async getAll(){
-        return await Artist.findAll({raw:true});
+        const allArtist = await Artist.findAll({raw:true});
+        if(!allArtist){
+            throw new QueryError("Nenhum artista foi encontrado");
+        }
+        return allArtist;
     }
 
     async findArtist(id){

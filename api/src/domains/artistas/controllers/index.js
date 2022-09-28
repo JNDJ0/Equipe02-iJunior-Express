@@ -5,13 +5,13 @@ const ArtistService = require('../service/ArtistService');
 
 
 // ********************************** ARTISTAS ******************************************************
-router.get('/', async (req, res) => {
+router.get('/', async (req, res, next) => {
     try {
         const artist = await ArtistService.getAll();
         return res.status(200).send(artist);
 
     } catch (error) {
-        return res.status(400);
+        next(error);
     }
 })
 
