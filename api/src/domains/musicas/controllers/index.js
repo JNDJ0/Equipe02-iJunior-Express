@@ -15,7 +15,7 @@ router.post('/user',async(req,res) =>{
 });
 
 router.get('/music', async(req,res) =>{
-    const music = await Music.findAll({raw:true})
+    const music = await MusicService.getAll();
     console.log(music);
     res.status(200).send(music);
 })
@@ -24,7 +24,7 @@ router.get('/music', async(req,res) =>{
 
 router.put ('/music/:id',async(req,res)=>{
     var id = req.params.id;
-    const findMusic = await Music.findOne({raw: true, where:{id: id}})
+    const findMusic = await MusicService.findMusic(id);
 
     const title = req.body.title;
     const artistID = req.body.artistID;
@@ -38,7 +38,7 @@ router.put ('/music/:id',async(req,res)=>{
         category,
     }
 
-    await Music.update(musicData, { where: {id: id}})
+    await MusicService.updateMusic(musicData, id);
 
     res.status(200).send(findMusic);
 });
@@ -46,8 +46,8 @@ router.put ('/music/:id',async(req,res)=>{
 router.delete('/music/:id',async(req,res)=>{
     var id = req.params.id;
 
-    const findMusic = await Music.findOne({raw: true, where:{id: id}})    
-    Music.destroy({where:{id:id}})
+    const findMusic = await MusicService.findMusic(id);
+    MusicService.deleteMusic(id);
 
     res.status(200).send(findMusic);
 })

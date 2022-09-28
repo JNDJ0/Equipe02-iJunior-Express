@@ -5,49 +5,63 @@ const ArtistService = require('../service/ArtistService');
 
 
 // ********************************** ARTISTAS ******************************************************
-router.post('/user',async(req,res) =>{
-    const body = req.body;
-    try{
+router.get('/', async (req, res) => {
+    try {
+        const artist = await ArtistService.getAll();
+        return res.status(200).send(artist);
+
+    } catch (error) {
+        return res.status(400);
+    }
+})
+
+router.post('/', async (req, res, next) => {
+    try {
+        const body = req.body;
         await ArtistService.creation(body);
-        return res.status(201);
-    }catch{
+        return res.status(201).send("Artista criado com sucesso! ");
+    } catch {
         return res.status(400);
     }
 });
 
-router.get('/artist', async(req,res) =>{
-    const artist = await Artist.findAll({raw:true})
-    console.log(artist)
-    res.status(200).send(artist);
-})
 
+router.put('/:id', async (req, res, next) => {
+    try {
+        var id = req.params.id;
+        const findArtist = await ArtistService.findArtist(id);
 
-router.put ('/artist/:id',async(req,res)=>{
-    var id = req.params.id;
-    const findArtist = await Artist.findOne({raw: true, where:{id: id}})
+        const name = req.body.nome
+        const nacionality = req.body.nacionality
+        const phone = req.body.phone
 
-    const name = req.body.nome
-    const nacionality = req.body.nacionality
-    const phone = req.body.phone
+        const artistData = {
+            name,
+            nacionality,
+            phone,
+        }
 
-    const artistData = {
-        name,
-        nacionality,
-        phone,
+        await ArtistService.updateArtist(artistData, id);
+
+        return res.status(200).send(findArtist);
+
+    } catch (error) {
+        return res.status(400).send("error");
     }
-
-    await Artist.update(artistData, { where: {id: id}})
-
-    res.status(200).send(findArtist);
 });
 
-router.delete('/artist/:id',async(req,res)=>{
-    var id = req.params.id;
+router.delete('/:id', async (req, res, next) => {
+    try {
+        var id = req.params.id;
 
-    const findArtist = await Artist.findOne({raw: true, where:{id: id}})    
-    Artist.destroy({where:{id:id}})
+        const findArtist = await ArtistService.findArtist(id);
+        ArtistService.deleteArtist(id);
 
-    res.status(200).send(findArtist);
+        res.status(200).send(findArtist);
+
+    } catch (error) {
+        return res.status(400).send("error");
+    }
 })
 
-module.exports =  router;
+module.exports = router;
