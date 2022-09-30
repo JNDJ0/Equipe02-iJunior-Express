@@ -21,7 +21,7 @@ router.post('/', async (req, res, next) => {
         await ArtistService.creation(body);
         return res.status(201).send("Artista criado com sucesso! ");
     } catch {
-        return res.status(400);
+        next(error)
     }
 });
 

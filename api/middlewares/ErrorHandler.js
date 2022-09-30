@@ -7,9 +7,9 @@ const statusCodes = require('../constants/statusCodes.js');
 
 function ErrorHandler(error, req, res, next){
     let message = error.message;
-    let status = statusCodes.internalServerError;
+    let status = statusCodes.INTERNAL_SERVER_ERROR;
 
-    if (error instanceof JsonWebTokenError || error instanceof NotAuthorizedError){
+    if (error instanceof NotAuthorizedError){
         status = statusCodes.FORBIDDEN;
     }
     if (error instanceof InvalidParamError){

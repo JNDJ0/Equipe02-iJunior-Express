@@ -4,12 +4,13 @@ const QueryError = require('../../../../errors/QueryError');
 
 class ArtistService{
     async creation(body){
+        
         await Artist.create(body);
     }
 
     async getAll(){
         const allArtist = await Artist.findAll({raw:true});
-        if(!allArtist){
+        if(allArtist.length === 0){
             throw new QueryError("Nenhum artista foi encontrado");
         }
         return allArtist;
