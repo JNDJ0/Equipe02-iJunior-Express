@@ -17,10 +17,9 @@ router.get('/', async (req, res, next) => {
 
 router.post('/', async (req, res, next) => {
     try {
-        const body = req.body;
-        await ArtistService.creation(body);
+        await ArtistService.creation(req.body);
         return res.status(201).send("Artista criado com sucesso! ");
-    } catch {
+    } catch (error){
         next(error)
     }
 });
@@ -28,39 +27,21 @@ router.post('/', async (req, res, next) => {
 
 router.put('/:id', async (req, res, next) => {
     try {
-        var id = req.params.id;
-        const findArtist = await ArtistService.findArtist(id);
-
-        const name = req.body.name;
-        const nacionality = req.body.nacionality;
-        const phone = req.body.phone;
-
-        const artistData = {
-            name,
-            nacionality,
-            phone,
-        }
-
-        await ArtistService.updateArtist(artistData, id);
-
-        return res.status(200).send(findArtist);
+        await ArtistService.updateArtist(req.body, req.params.id);
+        return res.status(200).send("Artista atualizado com sucesso!");
 
     } catch (error) {
-        return res.status(400).send("error");
+        next(error);
     }
 });
 
-router.delete('/:id', async (req, res, next) => {
+router.delete('/:id', async (req, res, next) => { // detecção de erros do delete não funcional
     try {
-        var id = req.params.id;
-
-        const findArtist = await ArtistService.findArtist(id);
-        ArtistService.deleteArtist(id);
-
-        res.status(200).send(findArtist);
+        ArtistService.deleteArtist(req.params.id);
+        res.status(200).send("Artista deletado com sucesso");
 
     } catch (error) {
-        return res.status(400).send("error");
+        next(error);
     }
 })
 
