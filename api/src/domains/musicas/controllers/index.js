@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const Music = require('../models/Music');
 const MusicService = require('../service/MusicService');
 
 // ********************************** MUSICA ******************************************************
@@ -9,48 +8,30 @@ router.get('/', async (req, res, next) => {
         const music = await MusicService.getAll();
         res.status(200).send(music);
     } catch (error) {
-        res.status(400).send("error");
+        next(error)
     }
 })
 
-router.post('/', async (req, res, next) => {
-    const body = req.body;
+router.post('/', async (req, res, next) => { // problema com ArtistaID
     try {
-        await MusicService.creation(body);
+        await MusicService.creation(req.body);
         return res.status(200).send("musica enviada com sucesso!");
-    } catch {
-        return res.status(400).send("error");
+    } catch (error){
+        next(error)
     }
 });
 
 
 router.put('/:id', async (req, res, next) => {
     try {
-
-        var id = req.params.id;
-        const findMusic = await MusicService.findMusic(id);
-
-        const title = req.body.title;
-        const artistID = req.body.artistID;
-        const photo = req.body.photo;
-        const category = req.body.category;
-
-        const musicData = {
-            title,
-            artistID,
-            photo,
-            category,
-        }
-
-        await MusicService.updateMusic(musicData, id);
-
+        await MusicService.updateMusic(req.body, req.params.id);
         res.status(200).send("Musica atualizada com sucesso!");
     } catch (error) {
-        res.status(400).send("error")
+        next(error)
     }
 });
 
-router.delete('/:id', async (req, res, next) => {
+router.delete('/:id', async (req, res, next) => { //problema com os erros do delete (deletar muscia com um id que n existe)
     try {
         var id = req.params.id;
 
@@ -59,7 +40,7 @@ router.delete('/:id', async (req, res, next) => {
 
         res.status(200).send(findMusic);
     } catch (error) {
-        res.status(400).send("error")
+       next(error);
     }
 })
 

@@ -1,6 +1,6 @@
 const express = require('express');
+const { SUCCESS } = require('../../../../constants/statusCodes');
 const router = express.Router();
-const Artist = require('../models/Artist');
 const ArtistService = require('../service/ArtistService');
 
 
@@ -8,7 +8,7 @@ const ArtistService = require('../service/ArtistService');
 router.get('/', async (req, res, next) => {
     try {
         const artist = await ArtistService.getAll();
-        return res.status(200).send(artist);
+        return res.status(SUCCESS).send(artist);
 
     } catch (error) {
         next(error);
@@ -18,7 +18,7 @@ router.get('/', async (req, res, next) => {
 router.post('/', async (req, res, next) => {
     try {
         await ArtistService.creation(req.body);
-        return res.status(201).send("Artista criado com sucesso! ");
+        return res.status(sucess).send("Artista criado com sucesso! ");
     } catch (error){
         next(error)
     }
@@ -28,7 +28,7 @@ router.post('/', async (req, res, next) => {
 router.put('/:id', async (req, res, next) => {
     try {
         await ArtistService.updateArtist(req.body, req.params.id);
-        return res.status(200).send("Artista atualizado com sucesso!");
+        return res.status(SUCCESS).send("Artista atualizado com sucesso!");
 
     } catch (error) {
         next(error);
@@ -38,7 +38,7 @@ router.put('/:id', async (req, res, next) => {
 router.delete('/:id', async (req, res, next) => { // detecção de erros do delete não funcional
     try {
         ArtistService.deleteArtist(req.params.id);
-        res.status(200).send("Artista deletado com sucesso");
+        res.status(SUCCESS).send("Artista deletado com sucesso");
 
     } catch (error) {
         next(error);
