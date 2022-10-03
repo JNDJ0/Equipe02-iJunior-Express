@@ -34,7 +34,7 @@ class MusicService{
         return await Music.update(body, { where: {id: id}})
     }
 
-    async deleteMusic(id){//problema com os erros do delete (deletar muscia com um id que n existe)
+    async deleteMusic(id){
         const musicID = await this.findMusic(id);
         if (musicID === null){
             throw new InvalidParamError("Nenhuma música foi encontrado com esse ID");

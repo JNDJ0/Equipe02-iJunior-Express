@@ -20,12 +20,9 @@ class ArtistService{
         return allArtist;
     }
 
-    async findArtist(id){
-        return await Artist.findByPk(id);
-    }
-
+    
     async updateArtist(artistData, id){
-        const artistID = await this.findArtist(id);
+        const artistID = await Artist.findByPk(id);
         if (artistID === null){
             throw new InvalidParamError("Nenhum artista foi encontrado com esse ID");
         }
@@ -35,12 +32,12 @@ class ArtistService{
         return await Artist.update(artistData, { where: {id: id}});
     }
 
-    async deleteArtist(id){ // detecção de erros do delete não funcional
-        const artistID = await this.findArtist(id);
+    async deleteArtist(id){ 
+        const artistID = await Artist.findByPk(id);
         if (artistID === null){
             throw new InvalidParamError("Nenhum artista foi encontrado com esse ID");
         }
-        await Artist.destroy({where:{id:id}})
+        return await artistID.destroy();
     }
 }
 

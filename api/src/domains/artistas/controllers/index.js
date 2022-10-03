@@ -35,9 +35,9 @@ router.put('/:id', async (req, res, next) => {
     }
 });
 
-router.delete('/:id', async (req, res, next) => { // detecção de erros do delete não funcional
+router.delete('/:id', async (req, res, next) => { 
     try {
-        ArtistService.deleteArtist(req.params.id);
+        await ArtistService.deleteArtist(req.params.id);
         res.status(SUCCESS).send("Artista deletado com sucesso");
 
     } catch (error) {
