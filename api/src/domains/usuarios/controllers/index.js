@@ -16,7 +16,7 @@ router.get('/', async(req,res,next) =>{
 router.post('/',async(req,res,next) =>{
     try{
         await UserService.creation(req.body);
-        return res.status(statusCodes.SUCCESS).send("Usuario criado com sucesso!");
+        return res.status(statusCodes.SUCCESS).send("User created successfully!");
     }catch(error){
         next(error)
     }
@@ -26,7 +26,7 @@ router.post('/',async(req,res,next) =>{
 router.put ('/:id',async(req,res,next)=>{
    try{
         await UserService.newUser(req.params.id, req.body);
-        return res.status(statusCodes.SUCCESS).send("Usuário alterado com sucesso");
+        return res.status(statusCodes.SUCCESS).send("User successfully updated");
    }catch(error){
         next(error)
    }
@@ -35,7 +35,7 @@ router.put ('/:id',async(req,res,next)=>{
 router.delete('/:id',async(req,res,next)=>{
     try{
         await UserService.deleteUser(req.params.id);
-        res.status(statusCodes.SUCCESS).send("Usuário deletado com sucesso!");
+        res.status(statusCodes.SUCCESS).send("User successfully deleted!");
     } catch(error){
         next(error);
     }

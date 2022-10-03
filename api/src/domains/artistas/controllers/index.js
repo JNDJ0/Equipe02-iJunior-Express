@@ -18,7 +18,7 @@ router.get('/', async (req, res, next) => {
 router.post('/', async (req, res, next) => {
     try {
         await ArtistService.creation(req.body);
-        return res.status(sucess).send("Artista criado com sucesso! ");
+        return res.status(sucess).send("Artist created successfully!");
     } catch (error){
         next(error)
     }
@@ -28,7 +28,7 @@ router.post('/', async (req, res, next) => {
 router.put('/:id', async (req, res, next) => {
     try {
         await ArtistService.updateArtist(req.body, req.params.id);
-        return res.status(SUCCESS).send("Artista atualizado com sucesso!");
+        return res.status(SUCCESS).send("Artist successfully updated!");
 
     } catch (error) {
         next(error);
@@ -38,7 +38,7 @@ router.put('/:id', async (req, res, next) => {
 router.delete('/:id', async (req, res, next) => { 
     try {
         await ArtistService.deleteArtist(req.params.id);
-        res.status(SUCCESS).send("Artista deletado com sucesso");
+        res.status(SUCCESS).send("Artist successfully deleted!");
 
     } catch (error) {
         next(error);

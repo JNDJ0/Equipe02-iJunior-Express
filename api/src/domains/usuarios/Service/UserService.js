@@ -6,7 +6,7 @@ class UserService {
 
     async creation(body) {
         if (body.name === "" || body.email === "" || body.password === "" || body.role === "") {
-            throw new QueryError("Carcteristicas de usuário incompletas");
+            throw new QueryError("Incomplete user characteristics");
         }
         await User.create(body);
     }
@@ -14,17 +14,17 @@ class UserService {
     async getAll() {
         const users = await User.findAll({ raw: true });
         if (users.length === 0) {
-            throw new QueryError('There are no users in the system.');
+            throw new QueryError("No user found");
         }
         return users;
     }
     async newUser(id, body) {
         const userID = await User.findByPk(id);
         if (body.name === "" || body.email === "" || body.password === "" || body.role === "") {
-            throw new QueryError("Carcteristicas de usuário incompletas");
+            throw new QueryError("Incomplete user characteristics");
         }
         if (userID === null) {
-            throw new QueryError('No user was added.');
+            throw new QueryError('No user were found with this ID');
         } else {
             await User.update(body, { where: { id: id } });
         }
@@ -32,7 +32,7 @@ class UserService {
     async deleteUser(id) {
         const userID = await User.findByPk(id);
         if (userID === null) {
-            throw new InvalidParamError('No user was found.');
+            throw new InvalidParamError('No artists were found with this ID');
         }
         return await userID.destroy();
     }

@@ -7,7 +7,7 @@ class ArtistService{
     async creation(body){
 
         if (body.name === "" || body.nacionality === "" || body.photo === "" ){
-            throw new QueryError("Carcteristicas de artista incompletas");
+            throw new QueryError("Incomplete artist characteristics");
         }
         await Artist.create(body);
     }
@@ -15,7 +15,7 @@ class ArtistService{
     async getAll(){
         const allArtist = await Artist.findAll({raw:true});
         if(allArtist.length === 0){
-            throw new QueryError("Nenhum artista foi encontrado");
+            throw new QueryError("No artist found");
         }
         return allArtist;
     }
@@ -24,10 +24,10 @@ class ArtistService{
     async updateArtist(artistData, id){
         const artistID = await Artist.findByPk(id);
         if (artistID === null){
-            throw new InvalidParamError("Nenhum artista foi encontrado com esse ID");
+            throw new InvalidParamError("No artists were found with this ID");
         }
         if (artistData.name === "" || artistData.nacionality === "" || artistData.photo === "" ){
-            throw new QueryError("Carcteristicas de artista incompletas");
+            throw new QueryError("Incomplete artist characteristics");
         }
         return await Artist.update(artistData, { where: {id: id}});
     }
@@ -35,7 +35,7 @@ class ArtistService{
     async deleteArtist(id){ 
         const artistID = await Artist.findByPk(id);
         if (artistID === null){
-            throw new InvalidParamError("Nenhum artista foi encontrado com esse ID");
+            throw new InvalidParamError("No artists were found with this ID");
         }
         return await artistID.destroy();
     }
