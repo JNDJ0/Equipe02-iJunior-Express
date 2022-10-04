@@ -2,9 +2,20 @@ const express = require('express');
 const router = express.Router();
 const UserService = require('../service/UserService'); //obs: no github, a pasta service está com a letra maiuscula por algum motivo :X
 const statusCodes = require('../../../../constants/statusCodes');
-
+// const auth-middlewares = require("../../../../middlewares/auth-middlewares");
 // ********************************** USUARIOS ******************************************************
+
+
+router.post('/login', {
+
+});
+
+router.post('/logout', {
+    
+});
+
 router.get('/', async(req,res,next) =>{
+    // verifyJWT,
     try{
         const users = await UserService.getAll()
         return res.status(statusCodes.SUCCESS).send(users);
@@ -24,6 +35,7 @@ router.post('/',async(req,res,next) =>{
 
 
 router.put ('/:id',async(req,res,next)=>{
+    // verifyJWT,
    try{
         await UserService.newUser(req.params.id, req.body);
         return res.status(statusCodes.SUCCESS).send("User successfully updated");
@@ -33,6 +45,7 @@ router.put ('/:id',async(req,res,next)=>{
 });
 
 router.delete('/:id',async(req,res,next)=>{
+    // verifyJWT,
     try{
         await UserService.deleteUser(req.params.id);
         res.status(statusCodes.SUCCESS).send("User successfully deleted!");
