@@ -1,5 +1,6 @@
 const InvalidParamError = require('../../../../errors/InvalidParamError');
 const QueryError = require('../../../../errors/QueryError');
+const PermissionError = require('../../../../errors/PermissionError');
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
 const User = require('../models/User');
@@ -18,8 +19,25 @@ class UserService {
         if (body.name === "" || body.email === "" || body.password === "" || body.role === "") {
             throw new QueryError("Incomplete user characteristics");
         }
-        user.password = await this.encryptPassword(body.password);
-        await User.create(body);
+        if (body.role === "admin"){
+            throw new PermissionError ("it is not possible for a user to create an admin role");
+        }
+        const user = await User.findOne({where: {email: body.email}});
+        if(user){
+            throw new QueryError("E-mail already registered")
+        }else{
+            const user = {
+                name: body.name,
+                email: body.email,
+                password: body.password,
+                role: body.role,
+            }
+            user.password = await this.encryptPassword(body.password);
+
+            await User.create(user);
+        }
+
+        
     }
 
     async getAll() {
@@ -51,6 +69,7 @@ class UserService {
         if (body.name === "" || body.email === "" || body.password === "" || body.role === "") {
             throw new QueryError("Incomplete user characteristics");
         }
+        
         if (body.password){
             body.password = await this.encryptPassword(body.password);
         }
