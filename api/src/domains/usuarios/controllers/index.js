@@ -2,20 +2,20 @@ const express = require('express');
 const router = express.Router();
 const UserService = require('../service/UserService'); //obs: no github, a pasta service está com a letra maiuscula por algum motivo :X
 const statusCodes = require('../../../../constants/statusCodes');
-const {loginMiddleware,
-    verifyJWT, logoutMiddleware} = require('../../../../middlewares/auth-middlewares');
+const { loginMiddleware,
+    verifyJWT,notLoggedIn } = require('../../../../middlewares/auth-middlewares');
 // const authentication = require("../../../../middlewares/auth-middlewares");
 // ********************************** USUARIOS ******************************************************
 
 
-// router.post('/login',notLoggedIn, loginMiddleware, async(req,res,next)=>{
-//     // try{
-//     //     await UserService.login(req, res, next);
-//     //     res.status(statusCodes.SUCCESS).send("User successfully logged in!");
-//     // }
-//     // catch (error){
-//     //     next(error);
-//     // }
+// router.post('/login:id',notLoggedIn, loginMiddleware, async(req,res,next)=>{
+//     try{
+//         await UserService.login(req, res, next);
+//         res.status(statusCodes.SUCCESS).send("User successfully logged in!");
+//     }
+//     catch (error){
+//         next(error);
+//     }
 // });
 
 // router.post('/logout/:id',async(req,res,next)=>{
@@ -27,52 +27,59 @@ const {loginMiddleware,
 //         next(error);
 //     }
 // });
-router.post('/login',loginMiddleware);
 
-// router.post('/logout',verifyJWT, async(req,res,next) =>{
-//     try{
+router.post('/login', 
+    notLoggedIn,
+    loginMiddleware);
 
-//     }catch(error){
-//         next(error);
-//     }
-// });
+router.post('/logout',
+    verifyJWT,
+    async (req, res, next) => {
+        try {
+            res.clearCookie('jwt');
+            res.status(statusCodes.NO_CONTENT).end();
+        } catch (error) {
+            next(error);
+        }
+    });
 
-router.get('/',verifyJWT, async(req,res,next) =>{
+
+router.get('/', verifyJWT, async (req, res, next) => {
     // 
-    try{
+    try {
         const users = await UserService.getAll()
         return res.status(statusCodes.SUCCESS).send(users);
-    }catch(error){
+    } catch (error) {
         next(error)
     }
 });
 
-router.post('/',async(req,res,next) =>{
-    try{
+router.post('/', async (req, res, next) => {
+    try {
         await UserService.creation(req.body);
         return res.status(statusCodes.SUCCESS).send("User created successfully!");
-    }catch(error){
+    } catch (error) {
         next(error)
     }
 });
 
 
-router.put ('/:id',verifyJWT, async(req,res,next)=>{
+router.put('/:id', verifyJWT, async (req, res, next) => {
     // 
-   try{
+    try {
         await UserService.newUser(req.params.id, req.body);
         return res.status(statusCodes.SUCCESS).send("User successfully updated");
-   }catch(error){
+    } catch (error) {
         next(error)
-   }
+    }
 });
 
-router.delete('/:id',verifyJWT, async(req,res,next)=>{
+router.delete('/:id', verifyJWT, async (req, res, next) => {
     // verifyJWT,
-    try{
+    try {
         await UserService.deleteUser(req.params.id);
         res.status(statusCodes.SUCCESS).send("User successfully deleted!");
-    } catch(error){
+    } catch (error) {
         next(error);
     }
 });

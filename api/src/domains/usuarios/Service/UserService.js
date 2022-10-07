@@ -110,12 +110,12 @@ class UserService {
 
     async logout(req, res, next) {
         const userID = await User.findByPk(req.params.id); 
-        if (!user){
+        if (!userID){
             throw new QueryError('No user was found with this ID');
         }
         if (userID.loggedIn) {
             authentication.logoutMiddleware(req,res,next);
-            user.loggedIn = false;
+            userID.loggedIn = false;
             /*
             await UserService.userLogin(req.params.id, false);
             const decoded = jwt.verify(token, process.env.SECRET_KEY);
