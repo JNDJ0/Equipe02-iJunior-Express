@@ -3,7 +3,6 @@ const QueryError = require('../../../../errors/QueryError');
 const PermissionError = require('../../../../errors/PermissionError');
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
-const User = require('../models/User');
 const authentication = require("../../../../middlewares/auth-middlewares");
 const { use } = require('../controllers');
 

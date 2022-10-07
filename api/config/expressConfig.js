@@ -1,6 +1,6 @@
-
 require('dotenv').config();
 
+const cookieParser = require('cookie-parser');
 const express = require('express');
 const app = express();
 const ErrorHandler = require('../middlewares/ErrorHandler');
@@ -13,18 +13,7 @@ app.use(cors(
     },
 ));
 
-const cors = require('cors');
-app.use(cors(
-    {
-        // env.
-        // credentials:
-    }
-))
-
-const cookieParser = require('cooki-parser');
 app.use(cookieParser());
-
-
 app.use(express.json());
 app.use(express.urlencoded({
     extended: true,
