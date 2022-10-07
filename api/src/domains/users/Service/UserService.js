@@ -59,10 +59,12 @@ class UserService {
 
     async newUser(id, body) {
         const userID = await User.findByPk(id);
+        if (userID.role !== "user"){
+            throw new PermissionError("Invalid role");
+        }
         if (body.name === "" || body.email === "" || body.password === "" || body.role === "") {
             throw new QueryError("Incomplete user characteristics");
         }
-        
         if (body.password){
             body.password = await this.encryptPassword(body.password);
         }
