@@ -30,9 +30,9 @@ const User = sequelize.define('User',{
         type: DataTypes.STRING,
     },
 
-    loggedIn: {
-        type: DataTypes.BOOLEAN,
-    }
+    // loggedIn: {
+    //     type: DataTypes.BOOLEAN,
+    // }
 });
 
 User.belongsToMany(Music,{

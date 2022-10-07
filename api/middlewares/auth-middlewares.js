@@ -1,9 +1,13 @@
-const express = require('express');
-const router = express.Router();
-const UserService = require("../src/domains/usuarios/service/UserService");
+const statusCodes = require('../constants/statusCodes');
+const NotAuthorizedError = require('../errors/NotAuthorizedError');
+const User = require('../src/domains/usuarios/models/User');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const UserService = require("../src/domains/usuarios/service/UserService");
 require('dotenv').config();
+
+
+const blacklist = [];
 
 function generateJWT(user,res){
     const body = {
@@ -14,7 +18,7 @@ function generateJWT(user,res){
     };
 
     const token = jwt.sign({user: body}, process.env.SECRET_KEY,
-        {expiresIN: process.env.JWT_EXPIRATION});
+        {expiresIn: process.env.JWT_EXPIRATION});
     
     res.cookie('jwt', token, {
         httpOnly: true,
@@ -34,9 +38,11 @@ function cookieExtractor(req){
 function verifyJWT(req,res, next){
     try{
         const token = cookieExtractor(req);
+    
         if(token){
             const decoded = jwt.verify(token, process.env.SECRET_KEY);
             req.user = decoded.user
+            req.token = token
         }
         
         if(!req.user){
@@ -50,22 +56,23 @@ function verifyJWT(req,res, next){
 
 async function loginMiddleware(req,res,next){
     try{
-        const user = await UserService.getByEmail(req.body.email);//User.findOne({where: {email: req.body.email}});
+        const user = await User.findOne({where: {email: req.body.email}});//User.findOne({where: {email: req.body.email}});
         if(!user){
             throw new NotAuthorizedError('Incorrect e-mail or password!');
         }else{
             const matchingPassword = await bcrypt.compare(req.body.password, user.password);
             if(!matchingPassword){
-                throw new NotAuthorizedError('Incorrect password!');
+                throw new NotAuthorizedError('Incorrect e-mail or password!');
             }
-            else{
-                await UserService.userLogin(req.params.id, true);
-            }
+            // else{
+            //     await UserService.userLogin(req.params.id, true);
+            // }
+            generateJWT(user, res);
         }
 
         generateJWT(user,res);
 
-        res.status(NO_CONTENT).end();
+        res.status(statusCodes.SUCCESS).send("Logged");
     }catch(error){
         next(error);
     }
@@ -93,4 +100,5 @@ async function logged(req,res,next){
 
 }
 
-module.exports = loginMiddleware, logoutMiddleware;
+module.exports = {loginMiddleware, logoutMiddleware, verifyJWT};
+// para exportar mais de uma função precisa de usar chaves
