@@ -1,8 +1,16 @@
 # Equipe02-iJunior-Express
-Membros: Gustavo, João Lucas, João Marcos, Lucas Vitor
+Membros: Gustavo, João Lucas, João Marcos
+Padrinho: Ivan
+Ejamiga: Lais
 
 # Relatório de erros
-Atualmente, está ocorrendo o erro **Music.belongsTo called with something that's not a subclass of Sequelize.Model**, na linha 33 do arquivo *api\src\domains\usuarios\models\Music.js*
+
+
+# Pendências
+Atualmente, existem algumas pendências levantadas pela equipe que merecem uma atenção:
+-criar artistas identicos
+-checagem em atualizar usuario
+-*relacionamentos* -> mais importante de todas
 
 # Nosso projeto
 Nosso projeto busca trazer um desenvolvimento back-end para o inicio de uma iniciativa envolvendo a arte, sendo mais específico, a música. Em princípio
