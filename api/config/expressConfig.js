@@ -1,6 +1,17 @@
+
+require('dotenv').config();
+
 const express = require('express');
 const app = express();
 const ErrorHandler = require('../middlewares/ErrorHandler');
+const cors = require('cors');
+
+app.use(cors(
+    {
+        origin: process.env.CLIENT_URL,
+        credentials: true,
+    },
+));
 
 app.use(express.json());
 app.use(express.urlencoded({

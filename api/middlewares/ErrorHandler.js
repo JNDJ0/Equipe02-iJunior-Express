@@ -4,11 +4,15 @@ const InvalidParamError = require('../errors/InvalidParamError.js');
 const TokenError = require('../errors/TokenError.js');
 const QueryError = require('../errors/QueryError.js');
 const statusCodes = require('../constants/statusCodes.js');
+const PermissionError = require('../errors/PermissionError.js');
 
 function ErrorHandler(error, req, res, next){
     let message = error.message;
     let status = statusCodes.INTERNAL_SERVER_ERROR;
 
+    if(error instanceof PermissionError){
+        status = statusCodes.UNAUTHORIZED;
+    }
     if (error instanceof NotAuthorizedError){
         status = statusCodes.FORBIDDEN;
     }

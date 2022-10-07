@@ -6,13 +6,13 @@ const statusCodes = require('../../../../constants/statusCodes');
 // ********************************** USUARIOS ******************************************************
 
 
-router.post('/login', {
+// router.post('/login', {
 
-});
+// });
 
-router.post('/logout', {
+// router.post('/logout', {
     
-});
+// });
 
 router.get('/', async(req,res,next) =>{
     // verifyJWT,
