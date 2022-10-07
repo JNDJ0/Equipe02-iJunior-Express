@@ -19,9 +19,9 @@ app.use(express.urlencoded({
     extended: true,
 }));
 
-const userRouter = require('../src/domains/usuarios/controllers/index');
-const musicRouter = require('../src/domains/musicas/controllers/index');
-const artistRouter = require('../src/domains/artistas/controllers/index');
+const userRouter = require('../src/domains/users/controllers/index');
+const musicRouter = require('../src/domains/musics/controllers/index');
+const artistRouter = require('../src/domains/artists/controllers/index');
 
 app.use("/api/user", userRouter);
 app.use("/api/music", musicRouter);

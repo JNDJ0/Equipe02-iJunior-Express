@@ -1,9 +1,9 @@
 const statusCodes = require('../constants/statusCodes');
 const NotAuthorizedError = require('../errors/NotAuthorizedError');
-const User = require('../src/domains/usuarios/models/User');
+const User = require('../src/domains/users/models/User');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const UserService = require("../src/domains/usuarios/service/UserService");
+const UserService = require("../src/domains/users/service/UserService");
 const PermissionError = require('../errors/PermissionError');
 require('dotenv').config();
 
