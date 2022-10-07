@@ -2,6 +2,9 @@ const InvalidParamError = require('../../../../errors/InvalidParamError');
 const QueryError = require('../../../../errors/QueryError');
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
+const User = require('../models/User');
+const authentication = require("../../../../middlewares/auth-middlewares");
+const { use } = require('../controllers');
 
 class UserService {
 
@@ -28,19 +31,19 @@ class UserService {
     }
     
     async getById(id){
-        const users = await User.findByPk(id);
-        if (!users){
+        const userID = await User.findByPk(id);
+        if (!userID){
             throw new QueryError("No user found");
         }
-        return users;
+        return userID;
     }
 
     async getByEmail(email){
-        const users = await User.findOne({where: {email: req.body.email}})
-        if (!users){
+        const userID = await User.findOne({where: {email: req.body.email}})
+        if (!userID){
             throw new QueryError("No user found");
         }
-        return users;
+        return userID;
     }
 
     async newUser(id, body) {
@@ -52,10 +55,11 @@ class UserService {
             body.password = await this.encryptPassword(body.password);
         }
         if (userID === null) {
-            throw new QueryError('No user were found with this ID');
+            throw new QueryError('No user was found with this ID');
         } else {
             await User.update(body, { where: { id: id } });
         }
+        return userID;
     }
     async deleteUser(id) {
         const userID = await User.findByPk(id);
@@ -63,6 +67,46 @@ class UserService {
             throw new InvalidParamError('No artists were found with this ID');
         }
         return await userID.destroy();
+    }
+    async login(req, res, next){
+        const userID = await User.findbyPk(id);
+        if (!user){
+            throw new QueryError('No user was found with this ID');
+        }
+        if (!userID.loggedIn) {
+            authentication.loginMiddleware(req,res,next);
+            user.loggedIn = true;
+        }else{
+            throw new TokenError('User is already logged in!');
+        }
+        return userID;
+    }
+
+    async isLoggedIn(id){
+        const user = await User.findbyPk(req.params.id); 
+        if (!user){
+            throw new QueryError('No user was found with this ID');
+        }
+        return user.loggedIn;
+    }
+
+    async logout(req, res, next) {
+        const userID = await User.findByPk(req.params.id); 
+        if (!user){
+            throw new QueryError('No user was found with this ID');
+        }
+        if (userID.loggedIn) {
+            authentication.logoutMiddleware(req,res,next);
+            user.loggedIn = false;
+            /*
+            await UserService.userLogin(req.params.id, false);
+            const decoded = jwt.verify(token, process.env.SECRET_KEY);
+            return decoded.user.destroy();
+            */
+        }else{
+            throw new TokenError('User is already logged out!');
+        }
+        return userID;
     }
 }
 

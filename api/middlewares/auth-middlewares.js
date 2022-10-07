@@ -58,6 +58,9 @@ async function loginMiddleware(req,res,next){
             if(!matchingPassword){
                 throw new NotAuthorizedError('Incorrect password!');
             }
+            else{
+                await UserService.userLogin(req.params.id, true);
+            }
         }
 
         generateJWT(user,res);
@@ -67,3 +70,27 @@ async function loginMiddleware(req,res,next){
         next(error);
     }
 }
+
+async function logoutMiddleware(req,res,next){
+    try{
+        const token = cookieExtractor(req);
+        if(token){
+            await UserService.userLogin(req.params.id, false);
+            const decoded = jwt.verify(token, process.env.SECRET_KEY);
+            decoded.user.destroy();
+        }
+        
+        if(!req.user){
+            throw new NotAuthorizedError("You need to login first!");
+        }
+        next();
+    }catch(error){
+        next(error);
+    }
+}
+
+async function logged(req,res,next){
+
+}
+
+module.exports = loginMiddleware, logoutMiddleware;

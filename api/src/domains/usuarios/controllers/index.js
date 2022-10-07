@@ -2,17 +2,30 @@ const express = require('express');
 const router = express.Router();
 const UserService = require('../service/UserService'); //obs: no github, a pasta service está com a letra maiuscula por algum motivo :X
 const statusCodes = require('../../../../constants/statusCodes');
-// const auth-middlewares = require("../../../../middlewares/auth-middlewares");
+const authentication = require("../../../../middlewares/auth-middlewares");
 // ********************************** USUARIOS ******************************************************
 
 
-router.post('/login', {
-
+router.post('/login/:id', async(req,res,next)=>{
+    try{
+        await UserService.login(req, res, next);
+        res.status(statusCodes.SUCCESS).send("User successfully logged in!");
+    }
+    catch (error){
+        next(error);
+    }
 });
 
-router.post('/logout', {
-    
+router.post('/logout/:id',async(req,res,next)=>{
+    // verifyJWT
+    try{
+        await UserService.logout(req, res, next); 
+        res.status(statusCodes.SUCCESS).send("User successfully logged out!");
+    } catch(error){
+        next(error);
+    }
 });
+
 
 router.get('/', async(req,res,next) =>{
     // verifyJWT,

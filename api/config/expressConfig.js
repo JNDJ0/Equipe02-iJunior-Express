@@ -2,6 +2,18 @@ const express = require('express');
 const app = express();
 const ErrorHandler = require('../middlewares/ErrorHandler');
 
+const cors = require('cors');
+app.use(cors(
+    {
+        // env.
+        // credentials:
+    }
+))
+
+const cookieParser = require('cooki-parser');
+app.use(cookieParser());
+
+
 app.use(express.json());
 app.use(express.urlencoded({
     extended: true,
