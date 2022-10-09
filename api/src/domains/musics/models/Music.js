@@ -1,9 +1,6 @@
 const sequelize = require('../../../../database/index');
 const {DataTypes} = require('sequelize');
 const Artist = require('../../artists/models/Artist');
-const User = require('../../users/models/User');
-const UserMusic = require('../../users-musics/models/UserMusic');
-
 
 const Music = sequelize.define('Music',{
     id:{
@@ -29,14 +26,13 @@ const Music = sequelize.define('Music',{
     },
 });
 
-// Music.belongsTo(Artist);
-// Artist.hasMany(Music);
-
+Music.belongsTo(Artist);
+Artist.hasMany(Music);
 
 
 Music.sync({alter: true, force: true})
     .then(() => {
-        console.log('Tabela de Musicas foi (re)criada');
+        // console.log('Tabela de Musicas foi (re)criada');
     })
     .catch((error) => console.log(error));
 

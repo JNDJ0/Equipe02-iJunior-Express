@@ -1,34 +1,35 @@
 const sequelize = require('../../../../database/index');
-const {DataTypes, Sequelize} = require('sequelize');
+const { DataTypes } = require('sequelize');
 const Music = require('../../musics/models/Music');
 const User = require('../../users/models/User');
 
 
-const UserMusic = sequelize.define('UserMusic',{});
+const UserMusic = sequelize.define('UserMusic', {
+    id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        allowNull: false,
+    },
+});
 
-UserMusic.associate = (Music) =>
-{
-    User.belongsToMany(Music,{
-        through: 'UserMusic',
-        as: 'music',
-        foreignKey: 'user_id',
-        otherkey:'music_id'
-    });
+User.belongsToMany(Music, {
+    through: 'UserMusic',
+});
 
-    Music.belongsToMany(User,{
-        through:'UserMusic',
-        as: 'user',
-        foreignKey: 'music_id',
-        otherkey:'user_id'
-    });
-};
-// User.hasMany(Music);
-// Music.hasMany(User);
+Music.belongsToMany(User, {
+    through: 'UserMusic',
+});
 
-UserMusic.sync({alter: false, force: false})
-    .then(()=>{
-        console.log('Tabela de UsuarioMusicas foi (re)criada');
+Music.hasMany(UserMusic);
+UserMusic.belongsTo(Music);
+User.hasMany(UserMusic);
+UserMusic.belongsTo(User);
+
+UserMusic.sync({ alter: true, force: true })
+    .then(() => {
+        // console.log('Tabela de UsuarioMusicas foi (re)criada');
     })
-    .catch((err)=>console.log(err));
-    
+    .catch((err) => console.log(err));
+
 module.exports = UserMusic;

@@ -22,10 +22,12 @@ app.use(express.urlencoded({
 const userRouter = require('../src/domains/users/controllers/index');
 const musicRouter = require('../src/domains/musics/controllers/index');
 const artistRouter = require('../src/domains/artists/controllers/index');
+const UserMusicRouter = require('../src/domains/users-musics/controllers/index');
 
 app.use("/api/user", userRouter);
 app.use("/api/music", musicRouter);
 app.use("/api/artist", artistRouter);
+app.use("/api/usermusic", UserMusicRouter);
 app.use(ErrorHandler);
 
 module.exports = app;

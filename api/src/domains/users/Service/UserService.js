@@ -17,12 +17,6 @@ class UserService {
         if (body.name === "" || body.email === "" || body.password === "" || body.role === "") {
             throw new QueryError("Incomplete user characteristics");
         }
-        if (body.role === "admin"){
-            throw new PermissionError ("It is not possible for a user to create an admin role");
-        }
-        if (body.role !== "user"){
-            throw new PermissionError ("Role invalid!");
-        }
         const user = await User.findOne({where: {email: body.email}});
         if(user){
             throw new QueryError("E-mail already registered")

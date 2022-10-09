@@ -79,23 +79,16 @@ async function loginMiddleware(req, res, next) {
     }
 }
 
-// async function logoutMiddleware(req,res,next){
-//     try{
-//         const token = cookieExtractor(req);
-//         if(token){
-//             // await UserService.userLogin(req.params.id, false);
-//             // const decoded = jwt.verify(token, process.env.SECRET_KEY);
-//             // decoded.user.destroy();
-//         }
-
-//         if(!req.user){
-//             throw new NotAuthorizedError("You need to login first!");
-//         }
-//         next();
-//     }catch(error){
-//         next(error);
-//     }
-// }
+const checkRole = (roles) => {
+    return (req, res, next) => {
+      try {
+        ! roles.includes(req.user.role) ? res.json('You do not have permission to perform this action') : next();
+      } catch(error){
+        next(error);
+      }
+  
+    };
+  };
 
 async function notLoggedIn(req, res, next) {
     try {
@@ -115,5 +108,4 @@ async function notLoggedIn(req, res, next) {
 }
 
 
-module.exports = { loginMiddleware, notLoggedIn, verifyJWT };
-// para exportar mais de uma função precisa de usar chaves
+module.exports = { loginMiddleware, notLoggedIn, verifyJWT, checkRole };

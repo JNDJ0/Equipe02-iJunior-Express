@@ -3,7 +3,10 @@ const router = express.Router();
 const UserService = require('../service/UserService'); //obs: no github, a pasta service está com a letra maiuscula por algum motivo :X
 const statusCodes = require('../../../../constants/statusCodes');
 const { loginMiddleware,
-    verifyJWT,notLoggedIn } = require('../../../../middlewares/auth-middlewares');
+    verifyJWT,
+    notLoggedIn,
+    checkRole } = require('../../../../middlewares/auth-middlewares');
+const userRoles = require('../../../../constants/UserRoles');
 
 router.post('/login', 
     notLoggedIn,
@@ -21,7 +24,8 @@ router.post('/logout',
     });
 
 router.get('/', 
-    verifyJWT, 
+    verifyJWT,
+    checkRole([userRoles.ADMIN]), 
     async (req, res, next) => {
     
     try {

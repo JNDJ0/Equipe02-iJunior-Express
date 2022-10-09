@@ -1,22 +1,22 @@
 const sequelize = require('../../../../database/index');
-const {DataTypes} = require('sequelize');
-const Music = require('../../musics/models/Music');
-const UserMusic = require('../../users-musics/models/UserMusic');
+const { DataTypes } = require('sequelize');
+const userRoles = require('../../../../constants/UserRoles');
 
-const User = sequelize.define('User',{
-    id:{
+
+const User = sequelize.define('User', {
+    id: {
         type: DataTypes.INTEGER,
-        primaryKey:true,
+        primaryKey: true,
         autoIncrement: true,
         allowNull: false,
     },
 
-    name:{
+    name: {
         type: DataTypes.STRING,
         allowNull: false,
     },
-  
-    email :{
+
+    email: {
         type: DataTypes.STRING,
         allowNull: false,
     },
@@ -27,29 +27,16 @@ const User = sequelize.define('User',{
     },
 
     role: {
-        type: DataTypes.STRING,
+        type: DataTypes.ENUM,
+        values: [userRoles.ADMIN, userRoles.USER],
+        defaultValue: userRoles.USER,
+        allowNull: false
     },
 });
 
-User.belongsToMany(Music,{
-    through: {
-        model: UserMusic
-    },
-    foreignKey: 'idUser',
-    constrait: true
-})
-
-Music.belongsToMany(User,{
-    through: {
-        model: UserMusic
-    },
-    foreignKey: 'idMusic',
-    constrait: true
-});
-
-User.sync({alter: false, force: false})
+User.sync({alter: true, force: true})
     .then(() => {
-        console.log('Tabela de Usuarios foi (re)criada');
+        // console.log('Tabela de Usuarios foi (re)criada');
     })
     .catch((error) => console.log(error));
 
